@@ -9,7 +9,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"path"
 	"regexp"
 	"strings"
@@ -23,7 +22,7 @@ var afs afero.Afero
 
 func init() {
 	afs = afero.Afero{
-		Fs: afero.NewOsFs(),
+		Fs: afero.NewMemMapFs(),
 	}
 }
 
@@ -129,7 +128,7 @@ func GetOrDownloadMongod(urlStr string, cachePath string, logger *memongolog.Log
 		return "", fmt.Errorf("error chmod-ing mongodb binary at %s: %s", mongodTmpFile, chmodErr)
 	}
 
-	renameErr := MoveFile(mongodTmpFile.Name(), mongodPath)
+	renameErr := afs.Rename(mongodTmpFile.Name(), mongodPath)
 	if renameErr != nil {
 		return "", fmt.Errorf("error writing mongod binary from %s to %s: %s", mongodTmpFile.Name(), mongodPath, renameErr)
 	}
@@ -171,28 +170,4 @@ var filenameUnsafeCharRegex = regexp.MustCompile("[^a-zA-Z0-9_-]")
 
 func sanitizeFilename(unsanitized string) string {
 	return filenameUnsafeCharRegex.ReplaceAllString(unsanitized, "_")
-}
-
-func MoveFile(sourcePath, destPath string) error {
-    inputFile, err := os.Open(sourcePath)
-    if err != nil {
-        return fmt.Errorf("Couldn't open source file: %s", err)
-    }
-    outputFile, err := os.Create(destPath)
-    if err != nil {
-        inputFile.Close()
-        return fmt.Errorf("Couldn't open dest file: %s", err)
-    }
-    defer outputFile.Close()
-    _, err = io.Copy(outputFile, inputFile)
-    inputFile.Close()
-    if err != nil {
-        return fmt.Errorf("Writing to output file failed: %s", err)
-    }
-    // The copy was successful, so now delete the original file
-    err = os.Remove(sourcePath)
-    if err != nil {
-        return fmt.Errorf("Failed removing original file: %s", err)
-    }
-    return nil
 }
