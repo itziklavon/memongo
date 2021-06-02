@@ -1,4 +1,4 @@
-package strikememongo
+package memongo
 
 import (
 	"errors"
@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/strikesecurity/strikememongo/mongobin"
-	"github.com/strikesecurity/strikememongo/strikememongolog"
+	"github.com/warphq/memongo/mongobin"
+	"github.com/warphq/memongo/memongolog"
 )
 
 // Options is the configuration options for a launched MongoDB binary
@@ -44,7 +44,7 @@ type Options struct {
 	Logger *log.Logger
 
 	// A LogLevel to log at. Defaults to LogLevelInfo.
-	LogLevel strikememongolog.LogLevel
+	LogLevel memongolog.LogLevel
 
 	// How long to wait for mongod to start up and report a port number. Does
 	// not include download time, only startup time. Defaults to 10 seconds.
@@ -121,8 +121,8 @@ func (opts *Options) fillDefaults() error {
 	return nil
 }
 
-func (opts *Options) getLogger() *strikememongolog.Logger {
-	return strikememongolog.New(opts.Logger, opts.LogLevel)
+func (opts *Options) getLogger() *memongolog.Logger {
+	return memongolog.New(opts.Logger, opts.LogLevel)
 }
 
 func (opts *Options) getOrDownloadBinPath() (string, error) {

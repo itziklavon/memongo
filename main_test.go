@@ -1,11 +1,11 @@
-package strikememongo
+package memongo
 
 import (
 	"context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/strikesecurity/strikememongo/strikememongolog"
+	"github.com/warphq/memongo/memongolog"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -18,7 +18,7 @@ func TestDefaultOptions(t *testing.T) {
 		t.Run(version, func(t *testing.T) {
 			server, err := StartWithOptions(&Options{
 				MongoVersion: version,
-				LogLevel:     strikememongolog.LogLevelDebug,
+				LogLevel:     memongolog.LogLevelDebug,
 			})
 			require.NoError(t, err)
 			defer server.Stop()
@@ -39,7 +39,7 @@ func TestWithReplica(t *testing.T) {
 		t.Run(version, func(t *testing.T) {
 			server, err := StartWithOptions(&Options{
 				MongoVersion:     version,
-				LogLevel:         strikememongolog.LogLevelDebug,
+				LogLevel:         memongolog.LogLevelDebug,
 				ShouldUseReplica: true,
 			})
 			require.NoError(t, err)

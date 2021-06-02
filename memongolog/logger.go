@@ -1,4 +1,4 @@
-package strikememongolog
+package memongolog
 
 import (
 	"log"

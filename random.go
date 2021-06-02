@@ -1,4 +1,4 @@
-package strikememongo
+package memongo
 
 import (
 	"crypto/rand"

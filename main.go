@@ -1,4 +1,4 @@
-package strikememongo
+package memongo
 
 import (
 	"bufio"
@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/strikesecurity/strikememongo/monitor"
-	"github.com/strikesecurity/strikememongo/strikememongolog"
+	"github.com/warphq/memongo/monitor"
+	"github.com/warphq/memongo/memongolog"
 )
 
 // Server represents a running MongoDB server
@@ -22,7 +22,7 @@ type Server struct {
 	cmd        *exec.Cmd
 	watcherCmd *exec.Cmd
 	dbDir      string
-	logger     *strikememongolog.Logger
+	logger     *memongolog.Logger
 	port       int
 }
 
@@ -224,7 +224,7 @@ var reShuttingDown = regexp.MustCompile("shutting down with code")
 // be sent to the port channel if the server start up correctly, and an
 // error will be send to the error channel if the server does not start up
 // correctly.
-func stdoutHandler(log *strikememongolog.Logger) (io.Writer, <-chan error, <-chan int) {
+func stdoutHandler(log *memongolog.Logger) (io.Writer, <-chan error, <-chan int) {
 	errChan := make(chan error)
 	portChan := make(chan int)
 
@@ -282,7 +282,7 @@ func stdoutHandler(log *strikememongolog.Logger) (io.Writer, <-chan error, <-cha
 }
 
 // The stderr handler just relays messages from stderr to our logger
-func stderrHandler(log *strikememongolog.Logger) io.Writer {
+func stderrHandler(log *memongolog.Logger) io.Writer {
 	reader, writer := io.Pipe()
 
 	go func() {
