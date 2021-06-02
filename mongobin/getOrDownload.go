@@ -101,7 +101,7 @@ func GetOrDownloadMongod(urlStr string, cachePath string, logger *memongolog.Log
 		}
 	}
 
-	mkdirErr := afs.MkdirAll(path.Dir(mongodPath), 0755)
+	mkdirErr := afs.MkdirAll(path.Dir(mongodPath), 0777)
 	if mkdirErr != nil {
 		return "", fmt.Errorf("error creating directory %s: %s", path.Dir(mongodPath), mkdirErr)
 	}
